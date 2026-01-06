@@ -31,3 +31,6 @@ Les analyses envisagées incluent :
 - Étude de l’évolution temporelle
 - Comparaison entre le nucléaire et les autres filières de production
 - Visualisation sous forme de graphiques (courbes, histogrammes)
+
+  ### Scrypt python
+- le scrypt python utilisé sera détailler sur une page html. (elle sera ajouter plus tard.) 
