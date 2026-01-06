@@ -11,7 +11,7 @@ Lien vers la plateforme de données :
 https://analysesetdonnees.rte-france.com/
 
 ### Problématique
-L’objectif de ce projet est d’étudier l’évolution de la part du nucléaire dans la production d’électricité française au fil des années, et d’analyser sa place par rapport aux autres modes de production.
+Quelle est l’évolution de la production d’électricité nucléaire en France entre 1995 et aujourd’hui, et quels impacts cette évolution a-t-elle eus sur la disponibilité de l’électricité sur le réseau ?
 
 ### Données utilisées
 Les données proviennent des fichiers CSV publiés par la RTE, notamment :
