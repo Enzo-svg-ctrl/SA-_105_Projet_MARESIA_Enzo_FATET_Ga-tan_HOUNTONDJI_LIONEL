@@ -49,8 +49,18 @@
 
       <pre><code class="language-python">
         <pre><code class="language-python">
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jan  6 09:49:40 2026
+
+@author: phili
+"""
+
+
 import csv
 import matplotlib.pyplot as plt
+from datetime import datetime
+
 evo = []
 with open("évolutionnuke.csv", newline= '') as csvfile :
     reader=csv.reader(csvfile,delimiter=';')
@@ -59,6 +69,8 @@ with open("évolutionnuke.csv", newline= '') as csvfile :
 del(evo[0])
 #print(evo)
 
+#Import du fichier de production d'énergie 
+
 dates = []
 g = 0.01
 h = 0
@@ -66,12 +78,15 @@ for i in range(len(evo)):
     if(str(1995+h) in evo[i][0]):
         dates.append(1995+h+g)
         g+=0.01
-    else :
+    else : 
         h+=1
         g=0.01
         dates.append(1995+h+g)
         g+=0.01
 #print(dates)
+
+#Ici, nous avons du retirer les tirets. De ce fait, nous les avons donc 
+#remplacés par des points sous la forme annee.mois
 
 valprod = []
 prod = []
@@ -82,6 +97,10 @@ for i in range(len(evo)):
     res.append(float(prod[i]))
 #print(res)
 
+#Ici, nous avons donc appliqué les valeurs en TWh où nous avons aussi retiré la virgule
+#pour y attribuer un point à la place pour permettre la conversion str -> float
+
+
 dispon = []
 with open("disponuke.csv", newline= '') as csvfile :
     reader=csv.reader(csvfile,delimiter=';')
@@ -90,26 +109,107 @@ with open("disponuke.csv", newline= '') as csvfile :
 del(dispon[0])
 #print(dispo)
 
+#Import du fichier de disponibilités
+
 valdispo = []
 dispo = []
 res2 = []
+val = 0
+listej = []
 for i in range(len(dispon)):
     valdispo.append(dispon[i][2])
-    if valdispo[i] == '':
-        del(valdispo[i])
-    dispo = [j.replace(',','.')for j in valdispo]
-    for j in range(len(valdispo)) :
-        if dispo[j] == '':
-            print(True)
-print(dispo)
+    dispo = [j.replace(',','.')for j in valdispo if j.strip() != '']
+for i in range(len(dispo)):
+    res2.append(float(dispo[i]))
+#print(res2)
 
-"""
-plt.plot(dates,res)
+
+
+moyennes = []   # liste des moyennes mensuelles
+mois = []       
+
+date_debut = datetime(2020, 1, 1)
+date_fin = datetime(2025, 12, 1)
+
+current = date_debut
+while current <= date_fin:
+    mois_str = current.strftime("%m/%Y")  # ex: "02/2020"
+
+    listej = []
+    val = 0
+
+    for i in range(len(dispon)):
+        if mois_str in dispon[i][0]:
+            listej.append(i)
+
+    for j in range(len(listej)):
+        val += res2[listej[j]]
+
+    if len(listej) > 0:
+        val = val / len(listej)
+    else:
+        val = 0 
+
+    moyennes.append(val)
+    mois.append(mois_str)
+
+# mois suivant
+    if current.month == 12:
+        current = datetime(current.year + 1, 1, 1)
+    else:
+        current = datetime(current.year, current.month + 1, 1)    
+
+dates_2 = []
+k = 0.01
+l = 0
+for i in range(len(mois)):
+    if(str(2020+l) in mois[i]):
+        dates_2.append(2020+k+l)
+        k+=0.01
+    else : 
+        l+=1
+        k=0.01
+        dates_2.append(2020+k+l)
+        k+=0.01
+
+#tentative calcul moyenne par mois 
+
+#Nous sommes en train de régler le soucis étant que nous avons des lignes vides
+#car elles ne sont pas encore rescencées (comme la fin de l'année 2025)
+
+ener = []
+with open("prodenergie.csv", newline= '') as csvfile :
+    reader=csv.reader(csvfile,delimiter=';')
+    for row in reader:
+        ener.append(row)
+del(ener[0])
+#print(ener)
+
+
+valener = []
+prod = []
+res3 = []
+for i in range(len(ener)):
+    valener.append(ener[i][2])
+    print(valener)
+    prod = [j.replace(',','.')for j in valener if j.strip() != '']
+for i in range(len(prod)):    
+    res3.append(float(prod[i]))
+#print(res3)
+
+#ça fait crash spyder
+
+
+
+
+plt.plot(dates_2,moyennes)
 plt.xlabel("dates")
 plt.ylabel('prod')
 plt.grid()
 plt.show()
-"""
+
+#Puis, nous nous occupons d'afficher le tableau des valeurs énergétiques produites en
+#fonction de la date (en mois / annees)
 </code></pre>
 
 
@@ -147,5 +247,6 @@ plt.show()
   </script>
 </body>
 </html>
+
 
 
